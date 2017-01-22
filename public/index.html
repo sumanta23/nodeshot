@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+    box-sizing: border-box;
+}
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+[class*="col-"] {
+    float: left;
+    padding: 15px;
+}
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+html {
+    font-family: "Lucida Sans", sans-serif;
+}
+.header {
+    background-color: #9933cc;
+    background-color: #33b5e5;
+    color: #ffffff;
+    padding: 15px;
+    text-align: center;
+}
+.row {
+    background-color: #9933cc;
+    background-color: #d3d3d3;
+    color: #000000;
+    padding: 15px;
+    text-align: center;
+    height: 300px;
+}
+
+@media screen and (max-width: 320px){
+    #body {
+        width: 320px;
+        height: 480px;
+    }
+    #imgyt {
+        width: 320px;
+        height: 480px;   
+    }
+}
+
+</style>
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+
+</head>
+<body id="body">
+
+<div class="header" >
+  <h1>NodeShot</h1>
+</div>
+
+<div class="row">
+  <div >
+  <br> URL : <input type="text" name="url" value="google.com" id="url"><br>
+  <input type="button" value="Submit" = onClick="dataSubmit()" id="submit">
+  <img src="" id="imgyt" style="display: none" height="480px" width="320px" />
+</div>
+</div>
+<script type="text/javascript">
+    function dataSubmit(){
+        var url = $("#url").val();
+        $.ajax({
+          url: "/img",
+          type: 'post',
+          data: {url: url},
+          contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+        }).done(function(res) {
+          $("#imgyt").attr("src","/img/"+res);
+          $("#imgyt").css("display", "");
+        });
+    }
+</script>
+</body>
+</html>

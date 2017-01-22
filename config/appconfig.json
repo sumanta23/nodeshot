@@ -1,0 +1,34 @@
+{
+    "app" :{
+        "port" : 5000,
+        "debug": "*"
+    },
+
+    "temp" : "/tmp/",
+
+    "redis":{
+        "host": "localhost",
+        "port": 6379,
+        "return_buffers": true
+    },
+
+    "rediskey":{
+        "filestore" : "filestore",
+        "ttl" : 300
+    },
+
+    "webshot":{
+        "siteType"   : "url",
+        "renderDelay":2000,
+        "resolusion":{
+            "height":480,
+            "weidth":320
+        },
+        "shotSize"   : {
+            "width"  : "window",
+            "height" : "window"
+        },
+        "defaultWhiteBackground": true,
+        "streamType" : "jpg"
+    }
+}
