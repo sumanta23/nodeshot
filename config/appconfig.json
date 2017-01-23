@@ -20,9 +20,9 @@
     "webshot":{
         "siteType"   : "url",
         "renderDelay":2000,
-        "resolusion":{
+        "screenSize":{
             "height":480,
-            "weidth":320
+            "width":320
         },
         "shotSize"   : {
             "width"  : "window",
