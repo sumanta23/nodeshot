@@ -4,6 +4,8 @@ var cjson = require('cjson');
 var config = cjson.load('./config/appconfig.json');
 console.log(config);
 
+require('./boot.js').init(config);
+
 var debug = require("debug")("rest:");
 var ServiceHandler = require("./ServiceHandler").serviceHandler;
 

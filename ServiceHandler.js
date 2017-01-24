@@ -20,7 +20,7 @@ function safelySetHeaders(res, headers) {
 
 function constructErrorResponse(e) {
     if (!(e instanceof Error)) {
-        console.warn('WARNING: Expecting Error, but got %s',
+        console.warn('WARNING: Error expected, but got %s',
                 JSON.stringify(e) || (e.toString && e.toString() || 'invalid argument'));
     }
 
