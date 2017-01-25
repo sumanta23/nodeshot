@@ -22,10 +22,10 @@ app.get('/', function(request, response) {
 app.post("/img", function(request, response){
 	var body = request.body;
 	console.log("body", body);
-	if(!body.url){
+	if(!body.url || body.url === ""){
 		response.status(400).json({errors: [{msg:"url do not exists", code: 400}]});
 	}
-	ServiceHandler(request, response, service.createImageShot(body.url));
+	ServiceHandler(request, response, service.createImageShot(body.url, body.resolution));
 });
 
 app.get("/img/:fileId", function(request, response){

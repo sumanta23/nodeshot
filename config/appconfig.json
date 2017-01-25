@@ -14,7 +14,7 @@
 
     "rediskey":{
         "filestore" : "filestore",
-        "ttl" : 300
+        "ttl" : 30
     },
 
     "webshot":{
