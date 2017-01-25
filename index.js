@@ -1,17 +1,14 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
 var cjson = require('cjson');
 var config = cjson.load('./config/appconfig.json');
 console.log(config);
-
 require('./boot.js').init(config);
-
 var debug = require("debug")("rest:");
 var ServiceHandler = require("./ServiceHandler").serviceHandler;
 
-var bodyParser = require('body-parser');
-// Create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var service = require("./lib/service.js");
 
 
@@ -22,7 +19,7 @@ app.get('/', function(request, response) {
   	response.sendFile(__dirname + '/public/index.html');
 });
 
-app.post("/img", urlencodedParser, function(request, response){
+app.post("/img", function(request, response){
 	var body = request.body;
 	console.log("body", body);
 	if(!body.url){
