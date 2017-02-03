@@ -1,9 +1,9 @@
 var inherits    = require('util').inherits;
 var BaseAdapter = require('./BaseAdapter.js');
 var fs          = require("fs");
+var schedular   = require('../../schedular/index.js');
 
-function 
-FileStore() {
+function FileStore() {
     this.channel = "FileStore";
     BaseAdapter.call(this);
 }
@@ -16,6 +16,9 @@ FileStore.prototype.put =function(filepath, url){
     var key = new Buffer(config.rediskey.filestore + ":" + url + ":" + filepath).toString('base64');
  
     return new Promise(function(resolve, reject){
+        var t = new Date();
+        t.setSeconds(t.getSeconds() + config.rediskey.ttl);
+        schedular.scheduleJob(t, function(){ console.log("clearing from localstore: "+ filepath); fs.unlink(filepath)});
         return resolve(key);
       });
 }
