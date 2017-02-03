@@ -2,8 +2,17 @@ var fs                 = require('fs');
 var Promise            = require('bluebird');
 var redis              = require('redis');
 var client             = redis.createClient(config.redis);
+var inherits           = require('util').inherits;
+var BaseAdapter        = require('./BaseAdapter.js');
 
-function put(filepath, url){
+function RedisStore() {
+    this.channel = "RedisStore";
+    BaseAdapter.call(this);
+}
+
+inherits(RedisStore, BaseAdapter);
+
+RedisStore.prototype.put = function(filepath, url){
     var key = new Buffer(config.rediskey.filestore + ":" + url + ":" + filepath).toString('base64');
  
     return new Promise(function(resolve, reject){
@@ -29,7 +38,7 @@ function put(filepath, url){
       });
 }
 
-function get(request, response, fileId) {
+RedisStore.prototype.get = function(request, response, fileId) {
     client.get(fileId,function(err,value) {
       if (err) { next(err); } else {
         if (!value) {
@@ -43,7 +52,7 @@ function get(request, response, fileId) {
 }
 
 
-module.exports = {
-	put : put,
-	get : get
-}
+module.exports.channelId = "RedisStore";
+module.exports.instance = function(){
+    return new RedisStore();
+};
