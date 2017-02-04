@@ -26,8 +26,9 @@ FileStore.prototype.put =function(filepath, url){
 
 FileStore.prototype.get =function(request, response, fileId) {
 	var fileInfo = new Buffer(fileId, 'base64').toString('ascii');
-    var index = fileInfo.indexOf('/');
+    var index = fileInfo.lastIndexOf(config.temp);
     var filepath = fileInfo.substring(index,fileInfo.length);
+    console.log(filepath);
     fs.readFile(filepath, function(err,value){
       if (err) { response.send("file not found").status(404); } else {
         if (!value) {

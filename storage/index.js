@@ -22,9 +22,13 @@ function loadListners(path, loadFilesInRoot) {
 
         if (pathStat.isFile() && file.substr(-3) === '.js') {
             if (loadFilesInRoot){
-                var channel = require(newpath);
-                if(channel.channelId && channel.instance){
-                    channelListners[channel.channelId] = channel.instance;
+                if(config.storage.type === "FileStore" && file === "RedisStore.js"){
+                    console.log("skipping loading RedisStore");
+                }else{
+                    var channel = require(newpath);
+                    if(channel.channelId && channel.instance){
+                        channelListners[channel.channelId] = channel.instance;
+                    }
                 }
             }
         }
