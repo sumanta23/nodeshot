@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var auth = require('./mw/authmiddleware.js');
+var authMW = auth.authorize;
 app.use(bodyParser.json());
 var cjson = require('cjson');
 var config = cjson.load(['./config/appconfig.json','./config/resourceconfig.json'], true);
@@ -16,10 +18,11 @@ if (config.app.debug) {
     else process.env.DEBUG = config.app.debug;
 }
 
-console.log(process.env.DEBUG);
-
+auth.initialize(app);
 
 app.set('port', (process.env.PORT || config.app.port))
+
+app.use(authMW);
 
 app.get('/', function(request, response) {
   	response.sendFile(__dirname + '/public/index.html');
