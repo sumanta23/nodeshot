@@ -2,6 +2,6 @@
 	"resources" : {
 		"jquery" : "jquery.js",
 		"navbar" : "nav.png",
-		"favicon.icon": "sode.svg"
+		"favicon.ico": "node.ico"
 	}
 }
