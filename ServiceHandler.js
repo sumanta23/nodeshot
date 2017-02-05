@@ -37,7 +37,7 @@ function serviceHandler (req, res, serviceP) {
             return errResponse;
         })
         .then(function (result) {
-            console.log(result);
+            debug("response--> ", result);
             safelySetHeaders(res, result.headers);
             res.status(result.status).send(result.body);
         });

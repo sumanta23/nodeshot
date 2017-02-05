@@ -1,6 +1,7 @@
 var inherits    = require('util').inherits;
 var BaseAdapter = require('./BaseAdapter.js');
 var fs          = require("fs");
+var debug       = require('debug')("FileStore: ");
 var schedular   = require('../../schedular/index.js');
 
 function FileStore() {
@@ -18,7 +19,7 @@ FileStore.prototype.put =function(filepath, url){
     return new Promise(function(resolve, reject){
         var t = new Date();
         t.setSeconds(t.getSeconds() + config.rediskey.ttl);
-        schedular.scheduleJob(t, function(){ console.log("clearing from localstore: "+ filepath); fs.unlink(filepath)});
+        schedular.scheduleJob(t, function(){ debug("clearing from localstore: "+ filepath); fs.unlink(filepath)});
         return resolve(key);
       });
 }
@@ -28,7 +29,7 @@ FileStore.prototype.get =function(request, response, fileId) {
 	var fileInfo = new Buffer(fileId, 'base64').toString('ascii');
     var index = fileInfo.lastIndexOf(config.temp);
     var filepath = fileInfo.substring(index,fileInfo.length);
-    console.log(filepath);
+    debug("fetching file: ", filepath);
     fs.readFile(filepath, function(err,value){
       if (err) { response.send("file not found").status(404); } else {
         if (!value) {

@@ -1,6 +1,6 @@
-init = function(_config) {
+init = function(config) {
     Object.defineProperty(global, 'config', {
-        value: _config,
+        value: config,
         writable: true,
         configurable: false,
         enumerable: true

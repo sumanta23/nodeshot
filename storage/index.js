@@ -1,5 +1,6 @@
 var fs           = require('fs');
 var _            = require('lodash');
+var debug        = require("debug")("storage:");
 
 var channelListners = {};
 
@@ -23,7 +24,7 @@ function loadListners(path, loadFilesInRoot) {
         if (pathStat.isFile() && file.substr(-3) === '.js') {
             if (loadFilesInRoot){
                 if(config.storage.type === "FileStore" && file === "RedisStore.js"){
-                    console.log("skipping loading RedisStore");
+                    debug("skipping loading RedisStore");
                 }else{
                     var channel = require(newpath);
                     if(channel.channelId && channel.instance){

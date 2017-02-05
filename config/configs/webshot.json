@@ -1,0 +1,14 @@
+{
+    "siteType"   : "url",
+    "renderDelay":2000,
+    "screenSize":{
+        "height":480,
+        "width":320
+    },
+    "shotSize"   : {
+        "width"  : "window",
+        "height" : "window"
+    },
+    "defaultWhiteBackground": true,
+    "streamType" : "jpg"
+}

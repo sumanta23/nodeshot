@@ -4,6 +4,10 @@
         "debug": "*"
     },
 
+    "auth" : {
+        "enable" : false
+    },
+
     "storage" : {
         "type" : "FileStore" 
     },
@@ -19,20 +23,5 @@
     "rediskey":{
         "filestore" : "filestore",
         "ttl" : 30
-    },
-
-    "webshot":{
-        "siteType"   : "url",
-        "renderDelay":2000,
-        "screenSize":{
-            "height":480,
-            "width":320
-        },
-        "shotSize"   : {
-            "width"  : "window",
-            "height" : "window"
-        },
-        "defaultWhiteBackground": true,
-        "streamType" : "jpg"
     }
 }
