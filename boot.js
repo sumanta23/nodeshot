@@ -7,4 +7,13 @@ init = function(config) {
     });
 };
 
+initMemStore = function(memstore){
+    Object.defineProperty(global, 'memstore', {
+        value: memstore,
+        writable: true,
+        configurable: false,
+        enumerable: true
+    });
+}
 exports.init = init;
+exports.initMemStore = initMemStore;

@@ -41,8 +41,8 @@ convict.addFormat('uri-template', dummy, uriTemplateLoader);
 
 var conf = convict(path.join(__dirname, 'configs'));
 
-var configfile = conf.get('app.configfile');
-
+var configfile = process.env.APPCONFIG || conf.get('app.configfile');
+configfile = path.join(__dirname, configfile);
 if (fs.existsSync(configfile)) {
     conf.loadFile(configfile);
     console.info('server: config loaded from %s', configfile);

@@ -49,8 +49,8 @@
             }
         }
     </style>
-    <script src="/jquery" ></script>
-
+    <script src="/jquery.js" ></script>
+    <script src="/notify.min.js" ></script>
 </head>
 
 <body id="body">
@@ -71,6 +71,7 @@
         </div>
     </div>
     <script type="text/javascript">
+        var clientId = "";
         function dataSubmit() {
             var url = $("#url").val();
             if (!url) {
@@ -82,6 +83,7 @@
                 type: 'post',
                 data: JSON.stringify({
                     url: url,
+                    userId : clientId,
                     resolution: {
                         width: screen.width,
                         height: screen.height
@@ -89,12 +91,40 @@
                 }),
                 contentType: 'application/json; charset=UTF-8'
             }).done(function(res) {
-                $("#imgpos").attr("src", "/img/" + res);
+                $("#imgpos").attr("src", "/img/" + res.hash+"?userId="+clientId);
                 $("#imgpos").css("display", "");
                 $("#navpos").css("display", "");
                 //$("#inputpos").css("display", "none");
             });
         }
+    </script>
+    <script src='/socket.io/socket.io.js'></script>
+    <script>
+        var socket = io();
+        
+        socket.on('welcome', function(data) {
+            console.log(data.userId);
+            clientId = data.userId;
+            // Respond with a message including this clients' id sent from the server
+            socket.emit('message', {data: 'foo!', id: data.id});
+        });
+
+        socket.on('news', function(data){
+            console.log(JSON.stringify(data));
+        });
+
+        socket.on("update", function(data){
+            $.notify(data.msg,{
+                className: data.event || 'info'
+            });
+        });
+
+        socket.on('reconnect', function() {
+            socket.emit("cevent", {data:"tring to connect"});
+            console.log('trying to reconnect to server');
+        });
+
+        socket.emit("cevent", {data:"tring to connect"});
     </script>
 </body>
 

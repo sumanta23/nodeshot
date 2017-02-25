@@ -3,6 +3,7 @@ var BaseAdapter = require('./BaseAdapter.js');
 var fs          = require("fs");
 var debug       = require('debug')("FileStore: ");
 var schedular   = require('../../schedular/index.js');
+var sendEvent   = require('../../socket.js').sendEvent;
 
 function FileStore() {
     this.channel = "FileStore";
@@ -13,32 +14,37 @@ inherits(FileStore, BaseAdapter);
 
 
 
-FileStore.prototype.put =function(filepath, url){
+FileStore.prototype.put =function(filepath, url, userId){
     var key = new Buffer(config.rediskey.filestore + ":" + url + ":" + filepath).toString('base64');
- 
+
     return new Promise(function(resolve, reject){
         var t = new Date();
         t.setSeconds(t.getSeconds() + config.rediskey.ttl);
-        schedular.scheduleJob(t, function(){ debug("clearing from localstore: "+ filepath); fs.unlink(filepath)});
+        schedular.scheduleJob(t, function(){
+            sendEvent(userId, 'update', {msg: "clearing from localstore ", event: "info"});
+            debug("clearing from localstore: "+ filepath);
+            fs.unlink(filepath);
+        });
         return resolve(key);
-      });
+    });
 }
 
 
-FileStore.prototype.get =function(request, response, fileId) {
-	var fileInfo = new Buffer(fileId, 'base64').toString('ascii');
+FileStore.prototype.get =function(request, response, fileId, userId) {
+    var fileInfo = new Buffer(fileId, 'base64').toString('ascii');
     var index = fileInfo.lastIndexOf(config.temp);
     var filepath = fileInfo.substring(index,fileInfo.length);
     debug("fetching file: ", filepath);
+    sendEvent(userId, 'update', {msg: "fetching file ", event: "success"});
     fs.readFile(filepath, function(err,value){
-      if (err) { response.send("file not found").status(404); } else {
-        if (!value) {
-          response.send("file not found").status(404);
-        } else {
-          response.writeHead(200, {"Content-Type": "image/jpg"});
-          response.end(value,'binary');
+        if (err) { response.send("file not found").status(404); } else {
+            if (!value) {
+                response.send("file not found").status(404);
+            } else {
+                response.writeHead(200, {"Content-Type": "image/jpg"});
+                response.end(value,'binary');
+            }
         }
-      }
     });
 }
 

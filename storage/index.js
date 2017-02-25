@@ -39,17 +39,17 @@ function loadListners(path, loadFilesInRoot) {
 loadListners(__dirname+'/lib', true);
 
 
-function putFile(filepath, url){
+function putFile(filepath, url, userId){
 	 if ( config.storage.type && _.isFunction(channelListners[config.storage.type])) {
         var channelHandler = channelListners[config.storage.type]();
-        return channelHandler.put(filepath, url);
+        return channelHandler.put(filepath, url, userId);
 	}
 }
 
-function getFile(req, res, fileId){
+function getFile(req, res, fileId, userId){
 	 if ( config.storage.type && _.isFunction(channelListners[config.storage.type])) {
         var channelHandler = channelListners[config.storage.type]();
-        return channelHandler.get(req, res, fileId);
+        return channelHandler.get(req, res, fileId, userId);
 	}
 }
 
