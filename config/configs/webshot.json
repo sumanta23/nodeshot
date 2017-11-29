@@ -10,5 +10,6 @@
         "height" : "window"
     },
     "defaultWhiteBackground": true,
-    "streamType" : "jpg"
+    "streamType" : "jpg",
+    "timeout": 10000
 }

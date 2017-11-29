@@ -1,12 +1,14 @@
 var config = require('./config');
-var HashTable = require('hashtable');
-memstore = new HashTable();
+var Hashtable = require('jshashtable');
+var memstore = new Hashtable();
 
 var boot = require('./boot.js')
+var uuid               = require('./uuid');
 boot.init(config);
 boot.initMemStore(memstore);
 var debug = require("debug")("rest:");
 var bodyParser = require('body-parser');
+var compression = require('compression');
 var morgan = require('morgan');
 var auth = require('./mw/authmiddleware.js');
 var authMW = auth.authorize;
@@ -15,18 +17,27 @@ var tracingmw = require('./mw/tracingMiddleware.js').initialize;
 var service = require("./lib/service.js");
 
 var express = require('express');
+var session = require('express-session');
 var app = express();
 var port = process.env.PORT || config.app.port;
+var server;
 
-var server = app.listen(port, function(){
-    debug("server strated on localhost:"+port)
-});
-require('./socket.js').listen(server)
+if(config.app.cluster){
+    server = require('./cluster.js').init(app, port, config.app.nworker);
+}else{
+    server = app.listen(port, function(){
+        debug("server started on localhost:"+port)
+    });
+}
+require('./socket.js').listen(server);
 
-app.use(morgan('combined'));
+app.use(session({secret: '$eCuRiTy'}));
+app.use(morgan('short'));
+app.use(compression({'threshold' : 10}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : false}));
 app.use(express.static(__dirname + '/public'));
+
 
 
 if(config.auth.enable === true){
@@ -53,3 +64,7 @@ app.get("/img/:fileId", function(request, response){
     return service.fetchImageShot(request, response, fileId, userId);
 });
 
+require("./notification");
+var dbpath  = "/tmp";
+var db = require('diskdb');
+db = db.connect(dbpath, ["events"]);

@@ -1,29 +1,33 @@
 var debug    = require('debug')('socketio: ');
+var sessionStore = require("./sessionStore");
 
-function sendEvent(userId, event, data){
+function sendEvent(userId, event, type, data){
     if(userId){
-        var temp=memstore.get(userId);
-        if(temp && temp.socket)
-            temp.socket.emit(event, data);
+        var obj = {"userId" : userId, msg : data, type : type, event: event};
+        sessionStore.putData(obj);
     }
 }
 
+
 function listen(server, opts) {
-    var io    = require('socket.io')(server);
+    const WebSocket = require('ws');
+    var wss = new WebSocket.Server({
+        server: server,
+        noServer : true
+    });
+    
+    wss.on('connection', function (socket, req) {
+        var userId       = req.headers.cookie;
+        userId       = new Buffer(userId).toString('base64');
+        memstore.put(userId, {userId: userId, socket :socket});
 
-    //io.set('transports', ['websocket', 'polling', 'xhr-polling']);
+        socket.send(JSON.stringify({event: "userId",msg: { type:"info", data:userId}}));
 
-    io.on('connection', function (socket) {
         socket.on('message', function (data) {
-            socket.emit('news', { hello: 'world' });
+            debu("msg recieved", JSON.stringify(data));
+            socket.send(JSON.stringify({event: "info", "data":"We are Connected"}));
         });
-
-        socket.on("cevent", function(data){
-            var userId = socket.id;
-            memstore.put(userId, {userId: userId, socket : socket});
-            socket.emit('welcome',{userId: userId});
-        });
-
+        
         socket.on('disconnect', function(){
             memstore.remove(socket.id);
             debug('user disconnected');

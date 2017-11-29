@@ -1,7 +1,10 @@
 {
     "app" :{
+        "url":"https://nodeshot.herokuapp.com",
         "port" : 5000,
-        "debug": "*,-socket.io*,-engine*,-express*,-body-parser*"
+        "cluster": true,
+        "nworker" : 5,
+        "debug": "*,-express*,-body-parser*"
     },
 
     "auth" : {
@@ -22,6 +25,6 @@
 
     "rediskey":{
         "filestore" : "filestore",
-        "ttl" : 10
+        "ttl" : 30
     }
 }

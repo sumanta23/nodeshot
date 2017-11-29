@@ -1,8 +1,9 @@
-var convict = require('convict');
-var path    = require('path');
-var fs      = require('fs');
+var convict     = require('convict');
+var path        = require('path');
+var fs          = require('fs');
 var uriTemplate = require('uri-templates');
-var _       = require('lodash');
+var _           = require('lodash');
+var cjson       = require('cjson');
 
 /**
  * dummy for convict formatter
@@ -38,8 +39,7 @@ convict.addFormat('path', dummy, pathLoader);
 convict.addFormat('regex', dummy, regexCompiler);
 convict.addFormat('uri-template', dummy, uriTemplateLoader);
 
-
-var conf = convict(path.join(__dirname, 'configs'));
+var conf = convict(cjson.load(path.join(__dirname, 'configs')));
 
 var configfile = process.env.APPCONFIG || conf.get('app.configfile');
 configfile = path.join(__dirname, configfile);

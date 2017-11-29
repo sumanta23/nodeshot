@@ -42,7 +42,7 @@ function responseHandler (req, res, serviceP) {
         .catch(function(error) {
             console.log(error);
             var errResponse = constructErrorResponse(error);
-            sendEvent(req.userId, 'update', {msg: errResponse.body.err, event: "error"});
+            sendEvent(req.userId, 'update', "error", errResponse.body.err);
             return errResponse;
         })
         .then(function (result) {
