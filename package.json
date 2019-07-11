@@ -19,7 +19,7 @@
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "jshashtable": "^0.1.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.14",
     "morgan": "^1.9.0",
     "node-schedule": "^1.2.5",
     "oauth2orize": "^1.11.0",
